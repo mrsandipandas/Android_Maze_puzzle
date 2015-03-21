@@ -9,9 +9,9 @@ var bottomWall : BoxCollider2D;
 var leftWall : BoxCollider2D;
 var rightWall : BoxCollider2D;
 
-//Reference the players
+//Reference the Ball and the ExitPause Button
 var Ball : Transform;
-var ExitPause : Transform;
+var Exit : Transform;
 
 function Start () { //Only set this to Update if you know the screen size can change during a playsession.
 
@@ -29,13 +29,14 @@ function Start () { //Only set this to Update if you know the screen size can ch
 	
 	rightWall.size = new Vector2(1f, mainCam.ScreenToWorldPoint(new Vector3(0f, Screen.height*2f, 0f)).y);
 	rightWall.offset = new Vector2(mainCam.ScreenToWorldPoint(new Vector3(Screen.width, 0f, 0f)).x + 0.5f -0.15f, 0f);
-
+	
 	LoadMaze();
 
 }
 
 function LoadMaze () {
-	Ball.position.x = 0.8*Screen.width;
-	//GameObject ExitPause = (GameObject) Instantiate(canvas, transform.position, transform.rotation);
-    //transform.SetParent (ExitPause, false);
+	Ball.position.x = mainCam.ScreenToWorldPoint (new Vector3 (Screen.width*(0.8), 0f, 0f)).x;
+	Ball.position.y = mainCam.ScreenToWorldPoint (new Vector3 (0f, Screen.height*(0.8), 0f)).y;
+	Exit.position.x = mainCam.ScreenToWorldPoint (new Vector3 (Screen.width*(0.3), 0f, 0f)).x;
+	Exit.position.y = mainCam.ScreenToWorldPoint (new Vector3 (0f, Screen.height*(0.3), 0f)).y;
 }
