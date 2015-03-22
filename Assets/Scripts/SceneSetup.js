@@ -9,9 +9,14 @@ var bottomWall : BoxCollider2D;
 var leftWall : BoxCollider2D;
 var rightWall : BoxCollider2D;
 
-//Reference the Ball and the ExitPause Button
+//Reference the maze's onjects
 var Ball : Transform;
 var Exit : Transform;
+var LargeWall : Transform;
+var SmallWall : Transform;
+var LargeHole : Transform;
+var SmallHole : Transform;
+private var rotating = false;
 
 function Start () { //Only set this to Update if you know the screen size can change during a playsession.
 
@@ -34,9 +39,56 @@ function Start () { //Only set this to Update if you know the screen size can ch
 
 }
 
+
 function LoadMaze () {
+
+	//Here i should fetch info from the passed maze, retrieved from the opponent's info
 	Ball.position.x = mainCam.ScreenToWorldPoint (new Vector3 (Screen.width*(0.8), 0f, 0f)).x;
 	Ball.position.y = mainCam.ScreenToWorldPoint (new Vector3 (0f, Screen.height*(0.8), 0f)).y;
 	Exit.position.x = mainCam.ScreenToWorldPoint (new Vector3 (Screen.width*(0.3), 0f, 0f)).x;
 	Exit.position.y = mainCam.ScreenToWorldPoint (new Vector3 (0f, Screen.height*(0.3), 0f)).y;
+	
+	SetObject (LargeWall, 0.7, 0.3, true);
+	SetObject (LargeWall, 0.3, 0.7, false);
+	SetObject (SmallWall, 0.5, 0.4, true);
+	SetObject (SmallWall, 0.25, 0.6, false);
+	
 }
+
+
+function SetObject (object : Transform, x : float, y : float, toRotate : boolean) {
+
+	var ObjectClone = Instantiate(object, transform.position, transform.rotation);
+	ObjectClone.position.x = mainCam.ScreenToWorldPoint (new Vector3 (Screen.width*x, 0f, 0f)).x;
+	ObjectClone.position.y = mainCam.ScreenToWorldPoint (new Vector3 (0f, Screen.height*y, 0f)).y;
+	
+	if (toRotate) {
+		RotateObject (ObjectClone, Vector3.forward*-90, 25); //This rotate the object by 90° clockwise
+	}
+	
+}
+
+
+function RotateObject (thisTransform : Transform, degrees : Vector3, rate : float) {
+	//Higher the rate, faster the rotation -> 25 looks like instant rotation
+    //if (rotating) return;
+ 
+    rotating = true;
+ 
+    var startRotation : Quaternion = thisTransform.rotation;
+    var endRotation : Quaternion = thisTransform.rotation * Quaternion.Euler(degrees);
+    var t : float = 0.0;
+ 
+    while (t <= 1.0) {
+    	t += Time.deltaTime * rate;
+    	thisTransform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
+    	yield;
+	}
+ 
+	rotating = false;
+ 
+}
+
+
+
+
