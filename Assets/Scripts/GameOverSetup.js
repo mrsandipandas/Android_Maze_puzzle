@@ -7,6 +7,8 @@ var mainCam : Camera;
 
 
 function Start () {
+	
+	Screen.orientation = ScreenOrientation.LandscapeLeft;
 
 	//these info should be fetched from the db
 	timeElasped = 100f;
@@ -26,4 +28,8 @@ function OnGUI () {
 	GUI.Label (new Rect (posX1, posY1, 200, 100), "Attempts:   " + attempts);
 	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec");
 	
+}
+
+function ChangeScene (scene : String) {
+	Application.LoadLevel(scene);
 }

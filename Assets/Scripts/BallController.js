@@ -17,3 +17,16 @@ function FixedUpdate () {
 //	movementSpeed_y = Input.acceleration.y * speed;
 //  GetComponent.<Rigidbody2D>().velocity = new Vector2(movementSpeed_x, movementSpeed_y);
 }
+
+
+function OnCollisionEnter2D (colInfo : Collision2D) {
+	if (colInfo.collider.tag == "Exit") {
+		Application.LoadLevel("GameCompleted");
+	}
+	
+	else if (colInfo.collider.tag == "Hole") {
+		Application.LoadLevel("GameOver");
+	}
+	
+}
+

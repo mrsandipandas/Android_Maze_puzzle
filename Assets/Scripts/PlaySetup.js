@@ -20,7 +20,7 @@ private var rotating = false;
 
 function Start () { //Only set this to Update if you know the screen size can change during a playsession.
 
-	Screen.orientation = ScreenOrientation.LandscapeLeft;
+	//Screen.orientation = ScreenOrientation.LandscapeLeft;
 
 	//Move each wall to its edge location:
 	topWall.size = new Vector2 (mainCam.ScreenToWorldPoint (new Vector3 (Screen.width * 2f, 0f, 0f)).x, 1f);
@@ -52,6 +52,10 @@ function LoadMaze () {
 	SetObject (LargeWall, 0.3, 0.7, false);
 	SetObject (SmallWall, 0.5, 0.4, true);
 	SetObject (SmallWall, 0.25, 0.6, false);
+	SetObject (LargeHole, 0.2, 0.3, true);
+	SetObject (LargeHole, 0.8, 0.9, false);
+	SetObject (SmallHole, 0.15, 0.15, true);
+	SetObject (SmallHole, 0.15, 0.9, false);
 	
 }
 
