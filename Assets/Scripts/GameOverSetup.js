@@ -1,4 +1,4 @@
-﻿#pragma strict
+#pragma strict
 
 var theSkin : GUISkin;
 var attempts : int;
@@ -8,8 +8,6 @@ var mainCam : Camera;
 
 function Start () {
 	
-	Screen.orientation = ScreenOrientation.LandscapeLeft;
-
 	//these info should be fetched from the db
 	timeElasped = 100f;
 	attempts = 5;

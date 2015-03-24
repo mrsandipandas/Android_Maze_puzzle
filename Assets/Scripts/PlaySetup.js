@@ -1,4 +1,4 @@
-﻿#pragma strict
+#pragma strict
 
 //Reference the camera
 var mainCam : Camera;
@@ -19,8 +19,6 @@ var SmallHole : Transform;
 private var rotating = false;
 
 function Start () { //Only set this to Update if you know the screen size can change during a playsession.
-
-	//Screen.orientation = ScreenOrientation.LandscapeLeft;
 
 	//Move each wall to its edge location:
 	topWall.size = new Vector2 (mainCam.ScreenToWorldPoint (new Vector3 (Screen.width * 2f, 0f, 0f)).x, 1f);
