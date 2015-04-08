@@ -140,4 +140,80 @@ public class ConnectionDb : MonoBehaviour
 		}
 		return result;
 	}
+
+
+
+	public bool insertMasterElement(String element_name, String element_property, String element_max, String element_credits) {
+		String query = "INSERT INTO master_element(element_name, element_property, element_max, element_credits) " +
+			"VALUES ('" + element_name + "', '" + element_property + "', " + element_max + ", " +element_credits + ");";
+		return executeNonQuery(query) >= 0;
+	}
+
+	public bool insertMasterMaze(String maze_desc) {
+		String query = "INSERT INTO master_maze(maze_desc) " +
+			"VALUES ('" + maze_desc + "');";
+		return executeNonQuery(query) >= 0;
+	}
+
+	public bool insertMasterPlayer(String player_username, String player_password, String player_email) {
+		String query = "INSERT INTO master_player(player_username, player_password, player_email) " +
+			"VALUES ('" + player_username + "', '" + player_password + "', '" + player_email + "');";
+		return executeNonQuery(query) >= 0;
+	}
+
+	public bool insertPlayerElement(String player_id, String element_id) {
+		String query = "INSERT INTO player_element(player_id, element_id) " +
+			"VALUES (" + player_id + ", " + element_id + ");";
+		return executeNonQuery(query) >= 0;
+	}
+	public bool insertPlayerMaze(String player_id, String maze_id, String player_maze_desc, String player_maze_count_played, String player_maze_time_avg) {
+		String query = "INSERT INTO player_maze(player_id, maze_id, player_maze_desc, player_maze_count_played, player_maze_time_avg) " +
+			"VALUES (" + player_id + ", " + maze_id + ", '" + player_maze_desc + "', " + player_maze_count_played + ", '" + player_maze_time_avg +   "');";
+		return executeNonQuery(query) >= 0;
+	}
+
+	public bool insertPlayerStats(String player_id, String player_stats_score, String player_stats_credits) {
+		String query = "INSERT INTO player_stats(player_id, player_stats_score, player_stats_credits) " +
+			"VALUES (" + player_id + ", " + player_stats_score + ", " + player_stats_credits + ");";
+		return executeNonQuery(query) >= 0;
+	}
+
+
+	private int executeNonQuery(String query) {
+		IDbConnection dbcon = null;
+		IDbCommand dbcmd = null;
+		IDataReader reader = null;
+		Int32 noOfRowsEffected = -1;
+		try{
+			Debug.Log("1");
+			dbcon = new MySqlConnection(connectionString);
+			Debug.Log("2");
+			dbcon.Open();
+			Debug.Log("3");
+			dbcmd = dbcon.CreateCommand();
+			Debug.Log("4");
+			dbcmd.CommandText = query;
+			Debug.Log("5");
+			noOfRowsEffected = dbcmd.ExecuteNonQuery();
+			Debug.Log("6");
+		}
+		catch(Exception e){
+			Debug.Log(e.Message);
+			Debug.Log(e.StackTrace);
+		}
+		finally{
+			// clean up
+			if(dbcmd != null) {
+				dbcmd.Dispose ();
+				dbcmd = null;
+			}
+			if(dbcon != null) {
+				dbcon.Close ();
+				dbcon = null;
+			}
+		}
+		return noOfRowsEffected;
+	}
+
+
 }
