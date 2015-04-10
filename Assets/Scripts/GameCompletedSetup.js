@@ -24,6 +24,9 @@ function Start () {
 	coin.position.y = mainCam.ScreenToWorldPoint (new Vector3(0f,Screen.height*(0.34),0f)).y;
 }
 
+function ChangeScene (scene : String) {
+	Application.LoadLevel(scene);
+}
 
 function OnGUI () {
 
