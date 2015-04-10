@@ -1,5 +1,4 @@
 ﻿#pragma strict
-
 var mainCam : Camera;
 var theSkin : GUISkin;
 var attempts : int;
@@ -8,6 +7,10 @@ var avgTime : float;
 var coins : int;
 var coin : Transform;
 
+
+function Awake()  
+{  
+} 
 
 function Start () {
 
