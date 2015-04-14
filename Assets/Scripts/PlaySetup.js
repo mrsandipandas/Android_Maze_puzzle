@@ -18,6 +18,7 @@ var LargeHole : Transform;
 var SmallHole : Transform;
 private var rotating = false;
 
+/*
 function Start () { //Only set this to Update if you know the screen size can change during a playsession.
 
 	//Move each wall to its edge location:
@@ -90,6 +91,7 @@ function RotateObject (thisTransform : Transform, degrees : Vector3, rate : floa
 	rotating = false;
  
 }
+*/
 
 
 

@@ -11,6 +11,7 @@ function Start () {
 
 function FixedUpdate () {
 
+	//if (Input.GetButtonDown("SaveBtn"))
 	var dir = new Vector2(Input.acceleration.x, Input.acceleration.y);
 	Physics2D.gravity = dir * force;
 //	movementSpeed_x = Input.acceleration.x * speed;
