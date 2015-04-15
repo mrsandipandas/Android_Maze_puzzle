@@ -2,6 +2,7 @@
 private var csScript : ConnectionDb;
 private var dbConnect : ConnectionDb;
 private var resultSet : ResultSet;
+private var maze : Maze;
 var theSkin : GUISkin;
 var attempts : int;
 var timeElasped : float; //used to represent the seconds
@@ -33,12 +34,17 @@ function OnGUI () {
 
 	GUI.skin = theSkin;
 	GUI.Label (new Rect (posX1, posY1, 200, 100), "Attempts:   " + attempts);
-	/*
-	// This will create an object for ConnectionDb and get player details
-	resultSet = dbConnect.getPlayerDetails();
-	*/
-	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec");
 	
+	// This will create an object for ConnectionDb and get player details
+	
+	//Get the CSharp Script  for ConnectionDb
+    csScript = this.GetComponent("ConnectionDb"); 
+    dbConnect = csScript.getInstance();
+	
+
+	//resultSet = dbConnect.getPlayerMazeDetails();
+	maze = dbConnect.getMazeFromPlayerMazeDetails(1);
+	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec" + maze.Components.Count);
 }
 
 function ChangeScene (scene : String) {

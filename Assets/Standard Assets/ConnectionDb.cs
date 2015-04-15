@@ -3,6 +3,9 @@ using System;
 using System.Collections;
 using System.Data;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
 
 public class ConnectionDb : MonoBehaviour
 {
@@ -59,14 +62,16 @@ public class ConnectionDb : MonoBehaviour
 		if (result == null) {
 			Debug.Log("Method result is null");
 		}
+
 		return result;
 	}
 	
 	public ResultSet getPlayerMazeDetails() {
 		String query = 	"SELECT * FROM player_maze;";
+
 		ResultSet result = executeQuery(query);
 		if (result == null) {
-			Debug.Log("Method result is null");
+			Debug.Log ("Method result is null");
 		}
 		return result;
 	}
@@ -79,6 +84,24 @@ public class ConnectionDb : MonoBehaviour
 		}
 		return result;
 	}
+
+	public Maze getMazeFromPlayerMazeDetails(int player_id) {
+		String query = 	"SELECT * FROM player_maze where player_id="+player_id+";";		
+		ResultSet result = executeQuery(query);
+		if (result == null) {
+			Debug.Log("Method result is null");
+		}
+		String json = "";
+		ArrayList rows = result.getRowsList ();
+		foreach (object[] row in rows) {
+			json = (String)row[3];
+		}
+		JObject obj = JObject.Parse(json);
+		JsonSerializer serializer = new JsonSerializer();
+		Maze maze = (Maze)serializer.Deserialize(new JTokenReader(obj), typeof(Maze));
+		return maze;
+	}
+
 
 	private ResultSet executeQuery(String query) {
 		IDbConnection dbcon = null;

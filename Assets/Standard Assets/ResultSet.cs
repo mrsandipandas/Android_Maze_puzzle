@@ -36,7 +36,7 @@ public class ResultSet {
 		foreach (String header in headers) {
 			result += header +"  ";
 		}
-		Debug.Log ("HEaders : " + result);
+		Debug.Log ("Headers : " + result);
 		return result;
 	}
 
