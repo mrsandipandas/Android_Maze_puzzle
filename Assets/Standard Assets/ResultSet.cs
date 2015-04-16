@@ -55,5 +55,34 @@ public class ResultSet {
 		return result;
 	}
 
+	public IList getColumnValues(String columnName) {
+		int index = getColumnIndex (columnName);
+		ArrayList columnValues = new ArrayList ();
+		foreach (object[] row in rowList) {
+			columnValues.Add(row[index]);
+		}
+		return columnValues;
+	}
+
+	public String getFirstColumnValue(String columnName) {
+		int index = getColumnIndex (columnName);
+		if (index == -1) {
+			return null;
+		}
+		object[] row = (object[])rowList.ToArray () [0];
+		return (String)(row[index]);
+	}
+
+	public int getColumnIndex(String columnName) {
+		int index = -1;
+		foreach(String header in headers) {
+			if(columnName.Equals(header)) {
+				index = headers.IndexOf(header);
+				break;
+			}
+		}
+		return index;
+	}
+
 
 }

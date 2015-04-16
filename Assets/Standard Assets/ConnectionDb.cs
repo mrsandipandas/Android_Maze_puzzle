@@ -91,11 +91,9 @@ public class ConnectionDb : MonoBehaviour
 		if (result == null) {
 			Debug.Log("Method result is null");
 		}
-		String json = "";
-		ArrayList rows = result.getRowsList ();
-		foreach (object[] row in rows) {
-			json = (String)row[3];
-		}
+		Debug.Log ("In function getMazeFromPlayerMazeDetails");
+		String json = (String)(result.getFirstColumnValue("player_maze_desc"));
+		Debug.Log (json);
 		JObject obj = JObject.Parse(json);
 		JsonSerializer serializer = new JsonSerializer();
 		Maze maze = (Maze)serializer.Deserialize(new JTokenReader(obj), typeof(Maze));
@@ -205,7 +203,6 @@ public class ConnectionDb : MonoBehaviour
 	private int executeNonQuery(String query) {
 		IDbConnection dbcon = null;
 		IDbCommand dbcmd = null;
-		IDataReader reader = null;
 		Int32 noOfRowsEffected = -1;
 		try{
 			Debug.Log("1");
