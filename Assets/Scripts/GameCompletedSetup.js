@@ -42,7 +42,7 @@ function OnGUI () {
 	GUI.skin = theSkin;
 	GUI.Label (new Rect (posX1, posY1, 200, 100), "Attempts:   " + attempts);
 	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec");
-	GUI.Label (new Rect (posX1, posY3, 250, 100), "Average Time:   " + avgTime + " sec");
-	GUI.Label (new Rect (posX2, posY4, 250, 100), "Coins:   " + coins);
+	GUI.Label (new Rect (posX3, posY3, 250, 100), "Average Time:   " + avgTime + " sec");
+	GUI.Label (new Rect (posX4, posY4, 250, 100), "Coins:   " + coins);
 	
 }

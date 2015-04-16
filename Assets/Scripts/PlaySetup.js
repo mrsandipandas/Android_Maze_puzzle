@@ -20,7 +20,7 @@ private var rotating = false;
 
 function Start () { //Only set this to Update if you know the screen size can change during a playsession.
 
-	//Move each wall to its edge location:
+		//Move each wall to its edge location:
 	topWall.size = new Vector2 (mainCam.ScreenToWorldPoint (new Vector3 (Screen.width * 2f, 0f, 0f)).x, 1f);
 	topWall.offset = new Vector2 (0f, mainCam.ScreenToWorldPoint (new Vector3 ( 0f, Screen.height, 0f)).y +0.5f -0.1f);
 	
@@ -38,7 +38,9 @@ function Start () { //Only set this to Update if you know the screen size can ch
 }
 
 
-function LoadMaze () {
+function LoadMaze () {	
+	//gets the opponent id
+	//FindOpponentSetup.opponentID;
 
 	//Here i should fetch info from the passed maze, retrieved from the opponent's info
 	Ball.position.x = mainCam.ScreenToWorldPoint (new Vector3 (Screen.width*(0.8), 0f, 0f)).x;
