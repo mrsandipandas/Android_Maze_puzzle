@@ -64,6 +64,7 @@ public class ResultSet {
 		return columnValues;
 	}
 
+	// Use this function with column name to retrieve column value when single row is returned.
 	public String getFirstColumnValue(String columnName) {
 		int index = getColumnIndex (columnName);
 		if (index == -1) {

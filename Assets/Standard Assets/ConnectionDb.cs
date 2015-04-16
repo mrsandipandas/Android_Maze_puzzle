@@ -9,14 +9,6 @@ using Newtonsoft.Json;
 
 public class ConnectionDb : MonoBehaviour
 {
-
-	//		string connectionString =
-	//			"Server=db4free.net;" +
-	//				"Database=mazzle;" +
-	//				"User ID=mazzle123;" +
-	//				"Password=m@zzl#" +
-	//				"Pooling=false";
-	
 	private String connectionString =  	"Server=sql3.freemysqlhosting.net;" +
 							  	"Port=3306;" + "Database=sql373249;" +
 								"uid=sql373249;" + "Pwd=mF6%dS7%;";
@@ -199,6 +191,12 @@ public class ConnectionDb : MonoBehaviour
 		return executeNonQuery(query) >= 0;
 	}
 
+	public bool pushMazeToPlayerMaze(int player_id, Maze maze){
+		String json = JsonConvert.SerializeObject(maze);
+		Debug.Log (json);
+		String query = "UPDATE player_maze SET player_maze_desc = '"+ json +"' WHERE player_id = "+ player_id +";";
+		return executeNonQuery (query) >= 0;
+	}
 
 	private int executeNonQuery(String query) {
 		IDbConnection dbcon = null;

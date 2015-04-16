@@ -40,11 +40,10 @@ function OnGUI () {
 	//Get the CSharp Script  for ConnectionDb
     csScript = this.GetComponent("ConnectionDb"); 
     dbConnect = csScript.getInstance();
-	
-
-	//resultSet = dbConnect.getPlayerMazeDetails();
 	maze = dbConnect.getMazeFromPlayerMazeDetails(1);
-	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec" + maze.Components.Count);
+	maze.Components.RemoveAt(4);
+	//GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec" + dbConnect.pushMazeToPlayerMaze(1, maze));
+	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec");
 }
 
 function ChangeScene (scene : String) {
