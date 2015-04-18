@@ -177,9 +177,9 @@ public class ConnectionDb : MonoBehaviour
 		return executeNonQuery(query) >= 0;
 	}
 
-	public bool insertPlayerElement(String player_id, String element_id) {
-		String query = "INSERT INTO player_element(player_id, element_id) " +
-			"VALUES (" + player_id + ", " + element_id + ");";
+	public bool insertPlayerElement(String player_id, String element_id, String element_count) {
+		String query = "INSERT INTO player_element(player_id, element_id, element_count) " +
+			"VALUES (" + player_id + ", " + element_id + ", " + element_count + ");";
 		return executeNonQuery(query) >= 0;
 	}
 	public bool insertPlayerMaze(String player_id, String maze_id, String player_maze_desc, String player_maze_count_played, String player_maze_time_avg) {
@@ -200,6 +200,7 @@ public class ConnectionDb : MonoBehaviour
 		String query = "UPDATE player_maze SET player_maze_desc = '"+ json +"' WHERE player_id = "+ player_id +";";
 		return executeNonQuery (query) >= 0;
 	}
+
 
 	private int executeNonQuery(String query) {
 		IDbConnection dbcon = null;
@@ -235,6 +236,84 @@ public class ConnectionDb : MonoBehaviour
 		}
 		return noOfRowsEffected;
 	}
+	private String getUpdateParameter(String parameters, String key, String value, bool isString){
+		String output = "";
+		if(value != null){
+			output += (parameters.Equals("")) ? output : ",";
+			if(isString){
+				output += key + " = '"+ value+ "'";
+			} else {
+				output += key + " = "+ value;
+			}
+		}
+		return output;
+	}
+	private String getUpdateParameter(String parameters, String key, String value){
+		return getUpdateParameter (parameters, key, value, true);
 
+	}	
+	public bool updateMasterElement(String element_name, String element_property, String element_max, String element_credits) {
+		string parameters = "";
+		parameters += getUpdateParameter(parameters, "element_property", element_property);
+		parameters += getUpdateParameter (parameters, "element_max", element_max, false);
+		parameters += getUpdateParameter (parameters, "element_credits", element_credits, false);
+		String query = "UPDATE master_element SET " + parameters + " WHERE element_name = '"+element_name+"';";
+		Debug.Log (query);
+		Debug.Log (executeNonQuery (query) >= 0);
+		return executeNonQuery(query) >= 0;
 
+	}
+	public bool updateMasterMaze(String maze_id, String maze_desc) {
+		string parameters = "";
+		parameters += getUpdateParameter (parameters, "maze_desc", maze_desc);
+		String query = "UPDATE master_maze SET " + parameters + " WHERE maze_id = "+maze_id+";";
+		Debug.Log (query);
+		Debug.Log (executeNonQuery (query) >= 0);
+		return executeNonQuery(query) >= 0;
+
+	}
+	public bool updateMasterPlayer(String player_username, String player_password, String player_email){
+		string parameters = "";
+		parameters += getUpdateParameter (parameters, "player_password", player_password);
+		parameters += getUpdateParameter (parameters, "player_email", player_email);
+		String query = "UPDATE master_player SET " + parameters + " WHERE player_username = '"+player_username+"';";
+		Debug.Log (query);
+		Debug.Log (executeNonQuery (query) >= 0);
+		return executeNonQuery(query) >= 0;
+
+	}
+	public bool updatePlayerElement(String player_id, String element_id, String element_count){
+		string parameters = "";
+		parameters += getUpdateParameter (parameters, "element_id", element_id, false);
+		parameters += getUpdateParameter (parameters, "element_count", element_count, false);
+		String query = "UPDATE player_element SET " + parameters + " WHERE player_id = "+player_id+";";
+		Debug.Log (query);
+		Debug.Log (executeNonQuery (query) >= 0);
+		return executeNonQuery(query) >= 0;
+
+	}
+	public bool updatePlayerMaze(String player_id, String maze_id, String player_maze_desc, String player_maze_count_played, String player_maze_time_avg) {
+		string parameters = "";
+		parameters += getUpdateParameter (parameters, "maze_id", maze_id, false);
+		parameters += getUpdateParameter (parameters, "player_maze_desc", player_maze_desc);
+		parameters += getUpdateParameter (parameters, "player_maze_count_played", player_maze_count_played);
+		parameters += getUpdateParameter (parameters, "player_maze_time_avg", player_maze_time_avg);
+		String query = "UPDATE player_maze SET " + parameters + " WHERE player_id = "+player_id+";";
+		Debug.Log (query);
+		Debug.Log (executeNonQuery (query) >= 0);
+		return executeNonQuery(query) >= 0;
+
+	}
+	public bool updatePlayerStats(String player_id, String player_stats_score, String player_stats_credits, String games_played, String games_won) {
+		string parameters = "";
+		parameters += getUpdateParameter (parameters, "player_stats_score", player_stats_score, false);
+		parameters += getUpdateParameter (parameters, "player_stats_credits", player_stats_credits, false);
+		parameters += getUpdateParameter (parameters, "games_played", games_played, false);
+		parameters += getUpdateParameter (parameters, "games_won", games_won, false);
+		String query = "UPDATE player_stats SET " + parameters + " WHERE player_id = "+player_id+";";
+		Debug.Log (query);
+		Debug.Log (executeNonQuery (query) >= 0);
+		return executeNonQuery(query) >= 0;
+
+	}
 }
