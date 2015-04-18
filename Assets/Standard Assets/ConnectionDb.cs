@@ -85,10 +85,13 @@ public class ConnectionDb : MonoBehaviour
 		}
 		Debug.Log ("In function getMazeFromPlayerMazeDetails");
 		String json = (String)(result.getFirstColumnValue("player_maze_desc"));
+		//String mazeID = (String)(result.getFirstColumnValue("maze_id"));
 		Debug.Log (json);
 		JObject obj = JObject.Parse(json);
 		JsonSerializer serializer = new JsonSerializer();
 		Maze maze = (Maze)serializer.Deserialize(new JTokenReader(obj), typeof(Maze));
+		//maze.mazeID = mazeID;
+		//Debug.Log ("MazeID **************" + maze.mazeID);
 		return maze;
 	}
 
@@ -185,9 +188,9 @@ public class ConnectionDb : MonoBehaviour
 		return executeNonQuery(query) >= 0;
 	}
 
-	public bool insertPlayerStats(String player_id, String player_stats_score, String player_stats_credits) {
-		String query = "INSERT INTO player_stats(player_id, player_stats_score, player_stats_credits) " +
-			"VALUES (" + player_id + ", " + player_stats_score + ", " + player_stats_credits + ");";
+	public bool insertPlayerStats(String player_id, String player_stats_score, String player_stats_credits, String games_played, String games_won) {
+		String query = "INSERT INTO player_stats(player_id, player_stats_score, player_stats_credits, games_played, games_won) " +
+			"VALUES (" + player_id + ", " + player_stats_score + ", " + player_stats_credits + ", " + games_played +", " + games_won + ");";
 		return executeNonQuery(query) >= 0;
 	}
 

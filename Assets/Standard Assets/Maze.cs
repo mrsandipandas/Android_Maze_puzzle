@@ -17,4 +17,7 @@ public class Component
 public class Maze
 {
 	public List<Component> Components { get; set; }
+	public String mazeID { get; set; }
+	public int counter { get; set; }
+	public float avgTime { get; set; }
 }

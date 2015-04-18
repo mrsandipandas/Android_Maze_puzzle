@@ -41,6 +41,7 @@ function OnGUI () {
     csScript = this.GetComponent("ConnectionDb"); 
     dbConnect = csScript.getInstance();
 	maze = dbConnect.getMazeFromPlayerMazeDetails(1);
+	//Debug.Log ("MazeID **************" + maze.mazeID);
 	maze.Components.RemoveAt(4);
 	//GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec" + dbConnect.pushMazeToPlayerMaze(1, maze));
 	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec");
