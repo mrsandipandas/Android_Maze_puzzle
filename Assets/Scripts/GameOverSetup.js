@@ -1,26 +1,16 @@
 #pragma strict
-private var csScript : ConnectionDb;
-private var dbConnect : ConnectionDb;
-private var resultSet : ResultSet;
+
 var theSkin : GUISkin;
 var attempts : int;
-var timeElasped : float; //used to represent the seconds
+var timeElapsed : float; 
 var mainCam : Camera;
 
-function Awake()  
-{  
-	/*
-    //Get the CSharp Script  for ConnectionDb
-    csScript = this.GetComponent("ConnectionDb"); 
-    dbConnect = csScript.getInstance();
-  */ 
-} 
 
 function Start () {
-	
-	//these info should be fetched from the db
-	timeElasped = 100f;
-	attempts = 5;	
+    
+	timeElapsed = PlayerPrefs.GetFloat("lastSession");
+	timeElapsed = Mathf.Round(timeElapsed * 100f) / 100f;
+	attempts = PlayerPrefs.GetInt("attempts");	
 }
 
 
@@ -33,11 +23,7 @@ function OnGUI () {
 
 	GUI.skin = theSkin;
 	GUI.Label (new Rect (posX1, posY1, 200, 100), "Attempts:   " + attempts);
-	/*
-	// This will create an object for ConnectionDb and get player details
-	resultSet = dbConnect.getPlayerDetails();
-	*/
-	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElasped + " sec");
+	GUI.Label (new Rect (posX2, posY2, 250, 100), "Time Elapsed:   " + timeElapsed + " sec");
 	
 }
 

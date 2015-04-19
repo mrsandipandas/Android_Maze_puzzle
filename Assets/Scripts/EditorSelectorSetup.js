@@ -1,11 +1,17 @@
 ﻿#pragma strict
 
+
 function Start () {
-	PlayerPrefs.SetInt("attempts", 0);
+
 }
 
 function Update () {
 
+}
+
+function PathSelector (path : int) {
+	PlayerPrefs.SetInt("safePath", path);
+	ChangeScene("Editor_Sandbox");
 }
 
 function ChangeScene (scene : String) {

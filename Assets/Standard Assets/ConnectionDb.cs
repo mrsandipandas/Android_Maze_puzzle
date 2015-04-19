@@ -3,20 +3,15 @@ using System;
 using System.Collections;
 using System.Data;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
 
 public class ConnectionDb : MonoBehaviour
 {
-
-	//		string connectionString =
-	//			"Server=db4free.net;" +
-	//				"Database=mazzle;" +
-	//				"User ID=mazzle123;" +
-	//				"Password=m@zzl#" +
-	//				"Pooling=false";
-	
 	private String connectionString =  	"Server=sql3.freemysqlhosting.net;" +
 							  	"Port=3306;" + "Database=sql373249;" +
-								"uid=sql373249;" + "Pwd=mF6%dS7%;";
+								"uid=sql373249;" + "Pwd=mF6%dS7%; Allow User Variables=True" ;
 	public static ConnectionDb instance = null;
 
 	public static ConnectionDb getInstance() {
@@ -44,6 +39,38 @@ public class ConnectionDb : MonoBehaviour
 		return result;
 	}
 
+	public int getUserID(String username) {
+		String query = 	"SELECT * FROM master_player where player_username='" + username +"';";
+		ResultSet result = executeQuery(query);
+		if (result == null) {
+			Debug.Log("Method result is null");
+		}
+		int userID = (result.getFirstColumnValueInt("player_id"));
+		return userID;
+	}
+
+	public bool checkAvailability(String username) {
+		String query = 	"SELECT count(*) as total FROM master_player where player_username='" + username +"';";
+		ResultSet result = executeQuery(query);
+		if (result == null) {
+			Debug.Log("Method result is null");
+			//return -1;
+		}
+		String total = (((String)result.getRowListInTxtFormat()).Split (' '))[0];
+		int count = int.Parse(total);
+		return count > 0;
+	}
+
+	public String getUserPsw(int userID) {
+		String query = 	"SELECT * FROM master_player where player_id='" + userID +"';";
+		ResultSet result = executeQuery(query);
+		if (result == null) {
+			Debug.Log("Method result is null");
+		}
+		String userPsw = (result.getFirstColumnValue("player_password"));
+		return userPsw;
+	}
+
 	public ResultSet getPlayerDetails() {
 		String query = 	"SELECT * FROM master_player;";
 		ResultSet result = executeQuery(query);
@@ -59,6 +86,7 @@ public class ConnectionDb : MonoBehaviour
 		if (result == null) {
 			Debug.Log("Method result is null");
 		}
+
 		return result;
 	}
 	
@@ -66,7 +94,7 @@ public class ConnectionDb : MonoBehaviour
 		String query = 	"SELECT * FROM player_maze;";
 		ResultSet result = executeQuery(query);
 		if (result == null) {
-			Debug.Log("Method result is null");
+			Debug.Log ("Method result is null");
 		}
 		return result;
 	}
@@ -80,32 +108,76 @@ public class ConnectionDb : MonoBehaviour
 		return result;
 	}
 
+	public PlayerStats getPlayerStats(int userID) {
+		String query = 	"SELECT * FROM player_stats where player_id="+userID+";";
+		ResultSet result = executeQuery(query);
+		if (result == null) {
+			Debug.Log("Method result is null");
+		}
+		PlayerStats stats = new PlayerStats ();
+		stats.credits = (int)(result.getFirstColumnValueInt("player_stats_credits"));
+		stats.score = (int)(result.getFirstColumnValueInt("player_stats_score"));
+		stats.gamesPlayed = (int)(result.getFirstColumnValueInt("games_played"));
+		stats.gamesWon = (int)(result.getFirstColumnValueInt("games_won"));
+		return stats;
+	}
+
+	public MazeObject getMazeFromPlayerMazeDetails(int player_id) {
+		String query = 	"SELECT * FROM player_maze where player_id="+player_id+";";		
+		ResultSet result = executeQuery(query);
+		if (result == null) {
+			Debug.Log("Method result is null");
+		}
+		//Debug.Log ("In function getMazeFromPlayerMazeDetails");
+		String json = (String)(result.getFirstColumnValue("player_maze_desc"));
+		//Debug.Log (json);
+		JObject obj = JObject.Parse(json);
+		JsonSerializer serializer = new JsonSerializer();
+		Maze maze = (Maze)serializer.Deserialize(new JTokenReader(obj), typeof(Maze));
+		int mazeID = (int)(result.getFirstColumnValueInt("maze_id"));
+		String avgTime = (String)(result.getFirstColumnValue("player_maze_count_played"));
+		String counter = (String)(result.getFirstColumnValue("player_maze_time_avg"));
+		MazeObject mazeObject = new MazeObject ();
+		mazeObject.mazeDescription = maze;
+		mazeObject.mazeID = mazeID;
+		mazeObject.avgTime = float.Parse(avgTime);
+		mazeObject.counter = int.Parse(counter);
+		return mazeObject;
+	}
+
+	public int getRandomOpponentID (String currentUsername) {
+		String query = "SELECT player_id FROM master_player WHERE player_username != '" + currentUsername + "' ORDER BY RAND() LIMIT 1;";
+		ResultSet result = executeQuery(query);
+		int opponentID = (int)(result.getFirstColumnValueInt("player_id"));
+		return opponentID;
+	}
+
 	private ResultSet executeQuery(String query) {
 		IDbConnection dbcon = null;
 		IDbCommand dbcmd = null;
 		IDataReader reader = null;
 		ResultSet result = null;
 		try{
-			Debug.Log("1");
+			//Debug.Log("1");
 			dbcon = new MySqlConnection(connectionString);
-			Debug.Log("2");
+			//Debug.Log("2");
 			dbcon.Open();
-			Debug.Log("3");
+			//Debug.Log("3");
 			dbcmd = dbcon.CreateCommand();
-			Debug.Log("4");
+			//Debug.Log("4");
 			dbcmd.CommandText = query;
-			Debug.Log("5");
+			//Debug.Log("5");
 			reader = dbcmd.ExecuteReader();
-			Debug.Log("6");
+			//Debug.Log("6");
 			// Read headers
 			ArrayList headers = new ArrayList();
-			Debug.Log("7");
-			Debug.Log("Field Count : " +  reader.FieldCount);
+			//Debug.Log("7");
+			//Debug.Log("Field Count : " +  reader.FieldCount);
 			for(int i=0; i<reader.FieldCount; i++) {
 				headers.Add(reader.GetName(i));
-				Debug.Log("Field Name at position " + i + " is " +  reader.GetName(i));
+				//Debug.Log("Field Name at position " + i + " is " +  reader.GetName(i));
 			}
-			Debug.Log("8");
+			//Debug.Log("8");
 			// Read data
 			ArrayList rowList = new ArrayList();
 			while (reader.Read()) {
@@ -113,7 +185,7 @@ public class ConnectionDb : MonoBehaviour
 				reader.GetValues(values);
 				rowList.Add(values);
 			}
-			Debug.Log("9");
+			//Debug.Log("9");
 			result = new ResultSet(headers, rowList);
 			if (result == null) {
 				Debug.Log("Base result is null");
@@ -141,8 +213,7 @@ public class ConnectionDb : MonoBehaviour
 		return result;
 	}
 
-
-
+	
 	public bool insertMasterElement(String element_name, String element_property, String element_max, String element_credits) {
 		String query = "INSERT INTO master_element(element_name, element_property, element_max, element_credits) " +
 			"VALUES ('" + element_name + "', '" + element_property + "', " + element_max + ", " +element_credits + ");";
@@ -172,30 +243,59 @@ public class ConnectionDb : MonoBehaviour
 		return executeNonQuery(query) >= 0;
 	}
 
-	public bool insertPlayerStats(String player_id, String player_stats_score, String player_stats_credits) {
-		String query = "INSERT INTO player_stats(player_id, player_stats_score, player_stats_credits) " +
-			"VALUES (" + player_id + ", " + player_stats_score + ", " + player_stats_credits + ");";
+	public bool insertPlayerStats(String player_id, String player_stats_score, String player_stats_credits, String games_played, String games_won) {
+		String query = "INSERT INTO player_stats(player_id, player_stats_score, player_stats_credits, games_played, games_won) " +
+			"VALUES (" + player_id + ", " + player_stats_score + ", " + player_stats_credits + ", " + games_played +", " + games_won + ");";
 		return executeNonQuery(query) >= 0;
 	}
 
+	public bool pushMazeToPlayerMaze(int player_id, Maze maze){
+		String json = JsonConvert.SerializeObject(maze);
+		//Debug.Log (json);
+		String query = "UPDATE player_maze SET player_maze_desc = '"+ json +"' WHERE player_id = "+ player_id +";";
+		return executeNonQuery (query) >= 0;
+	}
+
+	public bool updatePlayerStats(int playerID, int score, int credits) {
+		String query = "UPDATE player_stats SET games_played = games_played + 1," +
+			"player_stats_score = player_stats_score + " + score + "," +
+			"player_stats_credits = player_stats_credits + " + credits + "," +
+			"games_won = games_won + 1 WHERE player_id = " + playerID + ";";
+		return executeNonQuery (query) >= 0;
+	}
+
+	public String getPlayerRank(int playerID) {
+		String query = "SELECT d.player_id, c.player_rank AS rank " +
+			"FROM(SELECT player_stats_score, @rank:=@rank+1 player_rank FROM(SELECT DISTINCT player_stats_score FROM " +
+			"player_stats a ORDER   BY player_stats_score ASC ) t, (SELECT @rank:= 0) r ) c INNER JOIN " +
+			"player_stats d ON c.player_stats_score = d.player_stats_score WHERE d.player_id = " + playerID + ";";
+		ResultSet result = executeQuery(query);
+		String rank = (((String)result.getRowListInTxtFormat()).Split (' '))[1];
+		return rank;
+	}
+
+	public bool updateMazeStats(int player_id, String avgTime, String counter){
+		String query = "UPDATE  player_maze SET player_maze_count_played = '" + counter + "'," +
+			"player_maze_time_avg = '" + avgTime + "' WHERE player_id = " + player_id + ";";
+		return executeNonQuery (query) >= 0;
+	}
 
 	private int executeNonQuery(String query) {
 		IDbConnection dbcon = null;
 		IDbCommand dbcmd = null;
-		IDataReader reader = null;
 		Int32 noOfRowsEffected = -1;
 		try{
-			Debug.Log("1");
+			//Debug.Log("1");
 			dbcon = new MySqlConnection(connectionString);
-			Debug.Log("2");
+			//Debug.Log("2");
 			dbcon.Open();
-			Debug.Log("3");
+			//Debug.Log("3");
 			dbcmd = dbcon.CreateCommand();
-			Debug.Log("4");
+			//Debug.Log("4");
 			dbcmd.CommandText = query;
-			Debug.Log("5");
+			//Debug.Log("5");
 			noOfRowsEffected = dbcmd.ExecuteNonQuery();
-			Debug.Log("6");
+			//Debug.Log("6");
 		}
 		catch(Exception e){
 			Debug.Log(e.Message);

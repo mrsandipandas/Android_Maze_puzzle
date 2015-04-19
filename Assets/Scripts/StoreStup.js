@@ -1,7 +1,7 @@
 ﻿#pragma strict
 
 function Start () {
-	PlayerPrefs.SetInt("attempts", 0);
+
 }
 
 function Update () {
